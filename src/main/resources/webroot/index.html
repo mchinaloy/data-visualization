@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Data Visualization</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/bootstrap/jumbotron-narrow.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/graph/d3.min.js"></script>
+    <script src="js/graph/epoch.min.js"></script>
+    <script src="js/vertx/sockjs.min.js"></script>
+    <script src="js/vertx/vertx-eventbus.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/epoch.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="header clearfix">
+        <nav>
+            <ul class="nav nav-pills pull-right">
+                <li role="presentation">powered by <img src="http://vertx.io/vertx2/logo-white-big.png" width="130" height="40"/></li>
+            </ul>
+        </nav>
+        <h3 class="text-muted">Data Visualization</h3>
+    </div>
+
+    <h2 class="sub-header">Visualizations</h2>
+    <div id="heatMapChart" class="epoch category10" style="height: 200px"></div>
+    <div id="areaChart" class="epoch category10" style="height: 200px"></div>
+
+    <script>
+        var currentDate = new Date();
+
+        function updateGraph(newData) {
+            var table = document.getElementById("live-table");
+            var row = table.insertRow(1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+
+            if(newData.hasOwnProperty('layer1')){
+                var newChartData = [];
+                newChartData.push(newData.layer1);
+                newChartData.push(newData.layer2);
+                areaChartInstance.push(newChartData)
+                cell1.innerHTML = new Date(newData.layer1.time);
+                cell2.innerHTML = JSON.stringify(newData.layer1.y + "/" + newData.layer2.y);
+            } else{
+                var newHeatMapData = [newData];
+                heatMapInstance.push(newHeatMapData);
+                cell1.innerHTML = new Date(newData.time);
+                cell2.innerHTML = JSON.stringify(newData.histogram);
+            }
+
+            var count = $('#live-table').find('tr').length;
+            if (count > 10) {
+                document.getElementById("live-table").deleteRow(10);
+            }
+        }
+    </script>
+    <script>
+        var areaChartData = [
+            // The first layer
+            {
+                label: "Layer 1",
+                values: [{time: currentDate, y: 0}, {time: currentDate, y: 0}]
+            },
+            // The first layer
+            {
+                label: "Layer 2",
+                values: [{time: currentDate, y: 0}, {time: currentDate, y: 0}]
+            }
+        ];
+        var areaChartInstance = $('#areaChart').epoch({
+            type: 'time.area',
+            data: areaChartData,
+            axes: ['left', 'bottom', 'right']
+        });
+    </script>
+    <script>
+        var heatmapData = [
+            {
+                label: 'Series 1',
+                values: [
+                    {
+                        time: currentDate,
+                        histogram: {
+                            0: 0
+                        }
+                    }
+                ]
+            }
+        ];
+        var heatMapInstance = $('#heatMapChart').epoch({
+            type: 'time.heatmap',
+            data: heatmapData,
+            axes: ['left', 'bottom', 'right']
+        });
+    </script>
+    <script>
+        var eb = new EventBus("http://localhost:8080/eventbus");
+        eb.onopen = function () {
+            eb.registerHandler("histogram.data.out", function (err, msg) {
+                var str = msg.body;
+                updateGraph(str)
+            });
+            eb.registerHandler("chart.data.out", function (err, msg) {
+                var str = msg.body;
+                updateGraph(str)
+            });
+        };
+    </script>
+
+    <h2 class="sub-header">Live Data Stream (Most recent 10)</h2>
+
+    <div class="table-responsive">
+        <table id="live-table" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Time</th>
+                <th>JSON Data</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>
