@@ -1,6 +1,6 @@
-package input.visualization.infrastructure.persistence;
+package data.visualization.infrastructure.persistence;
 
-import input.visualization.domain.DataRepository;
+import data.visualization.domain.DataRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 

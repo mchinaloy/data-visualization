@@ -1,4 +1,4 @@
-package input.visualization.domain;
+package data.visualization.domain;
 
 import java.util.List;
 

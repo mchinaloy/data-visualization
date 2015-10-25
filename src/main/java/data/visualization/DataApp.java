@@ -1,10 +1,10 @@
-package input.visualization;
+package data.visualization;
 
-import input.visualization.domain.DataRepository;
-import input.visualization.domain.formatter.ChartProcessor;
-import input.visualization.domain.formatter.HistogramProcessor;
-import input.visualization.infrastructure.verticle.DataVerticle;
-import input.visualization.infrastructure.verticle.ServerVerticle;
+import data.visualization.domain.DataRepository;
+import data.visualization.infrastructure.verticle.DataVerticle;
+import data.visualization.domain.formatter.ChartProcessor;
+import data.visualization.domain.formatter.HistogramProcessor;
+import data.visualization.infrastructure.verticle.ServerVerticle;
 import io.vertx.core.Vertx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

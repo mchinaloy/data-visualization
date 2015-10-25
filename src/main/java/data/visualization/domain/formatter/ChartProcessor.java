@@ -1,4 +1,4 @@
-package input.visualization.domain.formatter;
+package data.visualization.domain.formatter;
 
 import io.vertx.core.json.JsonObject;
 import org.springframework.util.StringUtils;

@@ -1,8 +1,8 @@
-package input.visualization;
+package data.visualization;
 
-import input.visualization.domain.DataRepository;
-import input.visualization.infrastructure.persistence.FileRepository;
-import input.visualization.infrastructure.verticle.ServerVerticle;
+import data.visualization.domain.DataRepository;
+import data.visualization.infrastructure.persistence.FileRepository;
+import data.visualization.infrastructure.verticle.ServerVerticle;
 import io.vertx.core.Vertx;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package input.visualization.infrastructure.verticle;
+package data.visualization.infrastructure.verticle;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.ext.web.Router;

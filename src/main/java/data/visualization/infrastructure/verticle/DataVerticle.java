@@ -1,7 +1,7 @@
-package input.visualization.infrastructure.verticle;
+package data.visualization.infrastructure.verticle;
 
-import input.visualization.domain.DataRepository;
-import input.visualization.domain.formatter.DataProcessor;
+import data.visualization.domain.formatter.DataProcessor;
+import data.visualization.domain.DataRepository;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
