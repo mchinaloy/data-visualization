@@ -14,6 +14,9 @@ public class DataVerticle extends AbstractVerticle {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataVerticle.class);
 
+    private static final int INTERVAL = 1;
+    private static final int INITIAL_DELAY = 0;
+
     private final String eventBusName;
     private final DataProcessor dataProcessor;
     private final DataRepository dataRepository;
@@ -29,21 +32,14 @@ public class DataVerticle extends AbstractVerticle {
     public void start() throws Exception {
         LOG.info("Starting DataVerticle");
         DataReader dataReader = new DataReader();
-        executorService.scheduleAtFixedRate(dataReader, 0, 10, TimeUnit.SECONDS);
+        executorService.scheduleAtFixedRate(dataReader, INITIAL_DELAY, INTERVAL, TimeUnit.SECONDS);
     }
 
     private class DataReader implements Runnable {
         @Override
         public void run() {
-            try {
-                for (String line : dataRepository.loadData()) {
-                    JsonObject jsonObject = dataProcessor.formatData(line);
-                    vertx.eventBus().publish(eventBusName, jsonObject);
-                    Thread.sleep(1000);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            JsonObject jsonObject = dataProcessor.formatData(dataRepository.loadData());
+            vertx.eventBus().publish(eventBusName, jsonObject);
         }
     }
 }

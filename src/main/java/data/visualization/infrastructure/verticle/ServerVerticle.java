@@ -14,6 +14,8 @@ public class ServerVerticle extends AbstractVerticle {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServerVerticle.class);
 
+    private static final int PORT = 8080;
+
     @Override
     public void start() throws Exception {
         LOG.info("Starting ServerVerticle");
@@ -27,7 +29,7 @@ public class ServerVerticle extends AbstractVerticle {
             event.complete(true);
         }));
         router.route().handler(StaticHandler.create());
-        vertx.createHttpServer().requestHandler(router::accept).listen(8080);
+        vertx.createHttpServer().requestHandler(router::accept).listen(PORT);
         LOG.info("ServerVerticle started");
     }
 

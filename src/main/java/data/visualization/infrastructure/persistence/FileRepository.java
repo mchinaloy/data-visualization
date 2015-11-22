@@ -1,30 +1,39 @@
 package data.visualization.infrastructure.persistence;
 
 import data.visualization.domain.DataRepository;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.io.InputStreamReader;
 public class FileRepository implements DataRepository {
 
-    @Value("classpath:input/data")
-    private Resource data;
+    private static final Logger LOG = LoggerFactory.getLogger(FileRepository.class);
+    private static final int CHUNK_SIZE = 8;
+
+    private BufferedReader bufferedReader;
 
     @Override
-    public List<String> loadData() {
+    public String loadData() {
+        String data = "";
         try {
-            Path path = Paths.get(data.getURI());
-            return Files.readAllLines(path);
+            setupReader();
+            char[] buffer = new char[CHUNK_SIZE];
+            if(bufferedReader.read(buffer) == -1){
+                bufferedReader.reset();
+            }
+            data = String.valueOf(buffer);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("An error occurred whilst reading data chunk from file:", e);
         }
-        return new ArrayList<>();
+        return data;
+    }
+
+    private void setupReader() throws IOException {
+        if(bufferedReader == null) {
+            bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/input/image.txt")));
+        }
     }
 
 }

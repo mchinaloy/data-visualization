@@ -69,7 +69,7 @@
             var count = $('#live-table').find('tr').length;
             if (count > 10) {
                 document.getElementById("live-table").deleteRow(10);
-            }
+        }
         }
     </script>
     <script>
@@ -128,7 +128,7 @@
     <h2 class="sub-header">Live Data Stream (Most recent 10)</h2>
 
     <div class="table-responsive">
-        <table id="live-table" class="table table-striped">
+        <table id="live-table" class="table table-striped" style="table-layout: fixed">
             <thead>
             <tr>
                 <th>Time</th>

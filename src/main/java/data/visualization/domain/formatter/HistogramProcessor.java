@@ -1,24 +1,20 @@
 package data.visualization.domain.formatter;
 
+import data.visualization.domain.util.TimeUtil;
 import io.vertx.core.json.JsonObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class HistogramProcessor implements DataProcessor {
 
-    public JsonObject formatData(String line) {
-        Map<Integer, Integer> results = new HashMap<>();
-        String[] splitLine = line.split(" ");
+    @Autowired private TimeUtil timeUtil;
 
-        for (String number : splitLine) {
-            int parsedNumber = Integer.parseInt(number, 2);
-            Integer result = results.computeIfPresent(parsedNumber, (k, v) -> v = v + 1);
-            if (result == null) {
-                results.put(parsedNumber, 1);
-            }
-        }
+    private final Map<Integer, Integer> results = new HashMap<>();
+
+    public JsonObject formatData(String line) {
+        Map<Integer, Integer> results = processValues(line);
 
         JsonObject histogram = new JsonObject();
 
@@ -27,10 +23,22 @@ public class HistogramProcessor implements DataProcessor {
         }
 
         JsonObject jsonObject = new JsonObject();
-        jsonObject.put("time", new Date().getTime());
+        jsonObject.put("time", timeUtil.getCurrentDateAsLong());
         jsonObject.put("histogram", histogram);
 
         return jsonObject;
+    }
+
+    protected Map<Integer, Integer> processValues(String line) {
+            int parsedNumber = Integer.parseInt(line, 2);
+            Integer result = results.computeIfPresent(parsedNumber, (k, v) -> v = v + 1);
+            if (result == null) {
+                results.put(parsedNumber, 1);
+            }
+            if(results.size() >= 50){
+                results.clear();
+            }
+        return results;
     }
 
 }

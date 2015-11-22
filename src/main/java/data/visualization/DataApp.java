@@ -16,7 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import({AppConfig.class})
+@Import({ AppConfig.class })
 public class DataApp implements CommandLineRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataApp.class);
@@ -24,6 +24,8 @@ public class DataApp implements CommandLineRunner {
     @Autowired private Vertx vertx;
     @Autowired private DataRepository dataRepository;
     @Autowired private ServerVerticle serverVerticle;
+    @Autowired private ChartProcessor chartProcessor;
+    @Autowired private HistogramProcessor histogramProcessor;
 
     @Value("${chart.data.out}") private String chartEventBusName;
     @Value("${histogram.data.out}") private String histogramEventBusName;
@@ -36,8 +38,8 @@ public class DataApp implements CommandLineRunner {
     public void run(String... strings) throws Exception {
         LOG.info("Starting Vertx Application");
 
-        DataVerticle chartDataVerticle = new DataVerticle(chartEventBusName, new ChartProcessor(), dataRepository);
-        DataVerticle histogramDataVerticle = new DataVerticle(histogramEventBusName, new HistogramProcessor(), dataRepository);
+        DataVerticle chartDataVerticle = new DataVerticle(chartEventBusName, chartProcessor, dataRepository);
+        DataVerticle histogramDataVerticle = new DataVerticle(histogramEventBusName, histogramProcessor, dataRepository);
 
         vertx.deployVerticle(serverVerticle);
         vertx.deployVerticle(chartDataVerticle);
