@@ -1,5 +1,5 @@
 # DataVisualization
-This project demonstrates the use of Vert.x, a high performance reactive framework for the JVM. It can be compared to the likes of Akka if you are familiar with that.
+This project demonstrates the use of Vert.x, a high performance reactive framework for the JVM. It focuses on how it can be used to stream data in real-time to a web frontend.
 
 1. Frontend starts and subscribes to two event buses on a given port
 1. Backend begins to read the 4MB input file, binary data of an image
