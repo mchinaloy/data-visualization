@@ -12,6 +12,7 @@ The frontend contains two charts:
 1. Heatmap that uses data in a histogram format. It represents the values of each 8 byte chunk read from file and then evaluated as an integer. For example 00001011 = 11. The BE then keeps a count of how many times this value has occurred (map will remember at most 50 distinct values).
 2. Area chart, this plots the number of 0's versus the number of 1's that have occurred in the most recent 8 byte chunk read from the file. 
 
+To run the application you can do - mvn spring-boot:run
 
 Epoch Charts
 https://fastly.github.io/epoch/
