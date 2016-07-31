@@ -1,4 +1,4 @@
-# DataVisualization
+# data-visualization
 This project demonstrates the use of Vert.x, a high performance reactive framework for the JVM. It focuses on how it can be used to stream data in real-time to a web frontend.
 
 1. Frontend starts and subscribes to two event buses
